@@ -1,0 +1,27 @@
+$typo-map: (
+  14: 0.875rem,
+  16: 1rem,
+  20: 1.25rem,
+  24: 1.5rem,
+  32: 2rem,
+);
+
+@function _get-typo-value($font-size) {
+  @return map-get($typo-map, $font-size);
+}
+
+$font-size-14: _get-typo-value(14);
+$line-height-14: _get-typo-value(24);
+$letter-spacing-14: -0.01em;
+
+$font-size-16: _get-typo-value(16);
+$line-height-16: _get-typo-value(24);
+$letter-spacing-16: -0.01em;
+
+$font-size-20: _get-typo-value(20);
+$line-height-20: _get-typo-value(24);
+$letter-spacing-20: -0.01em;
+
+$font-size-24: _get-typo-value(24);
+$line-height-24: _get-typo-value(32);
+$letter-spacing-24: -0.01em;
