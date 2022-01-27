@@ -50,9 +50,7 @@ function createBtn() {
   button.setAttribute('class', 'carrot-btn');
   button.setAttribute('type', 'button');
   button.setAttribute('data-id', 'carrot');
-  button.innerHTML = `
-    <img src="./assets/images/carrot.png" alt="당근" />
-  `;
+  button.innerHTML = '<img src="./assets/images/carrot.png" alt="당근" />';
 
   return button;
 }
@@ -80,6 +78,15 @@ function reset() {
   counter.textContent = init.count;
 }
 
+function changeControlBtn(event) {
+  const newName = id === 'play' ? 'replay' : 'play';
+  const ariaValue = newName === 'play' ? '시작' : '다시할래';
+
+  event.target.setAttribute('data-id', `${newName}`);
+  event.target.setAttribute('aria-label', `${ariaValue}`);
+  event.target.innerHTML = `<i class="ic-${newName}" aria-hidden="true"></i>`;
+}
+
 window.addEventListener('load', () => {
   const carrotBtn = document.querySelectorAll('.carrot-btn');
 
@@ -89,7 +96,6 @@ window.addEventListener('load', () => {
 
 header.addEventListener('click', (e) => {
   id = e.target.dataset.id;
-
   if (!id) return;
 
   if (id === 'replay') {
@@ -104,36 +110,25 @@ header.addEventListener('click', (e) => {
       gameZone.insertBefore(button, bugBtn);
     }
 
-    setBtnLocation();
     reset();
-
-    e.target.setAttribute('class', 'play-btn');
-    e.target.setAttribute('data-id', 'play');
-    e.target.textContent = '시작';
   }
 
   if (id === 'play') {
     onClock();
-    setBtnLocation();
-
     gameZone.classList.add('is-active');
-    e.target.setAttribute('class', 'replay-btn');
-    e.target.setAttribute('data-id', 'replay');
-    e.target.textContent = '다시할래!';
   }
 
-  const newName = id === 'replay' ? 'play' : 'replay';
-  e.target.setAttribute('class', `${newName}-btn`);
-  e.target.setAttribute('data-id', `${newName}`);
+  changeControlBtn(e);
+  setBtnLocation();
 });
 
 gameZone.addEventListener('click', (e) => {
   id = e.target.dataset.id;
+  if (!id) return;
 
   if (id === 'bug') {
     clearInterval(countdown);
     gameOver();
-    return;
   }
 
   if (id === 'carrot') {
@@ -141,7 +136,9 @@ gameZone.addEventListener('click', (e) => {
     counter.textContent = count;
     gameZone.removeChild(e.target);
 
-    if (time > 0 && count === 0) {
+    const success = time > 0 && count === 0 ? true : false;
+
+    if (success) {
       clearInterval(countdown);
       win();
     }
