@@ -1,0 +1,32 @@
+$flex-value: (
+  center: center,
+  stretch: stretch,
+  start: flex-start,
+  end: flex-end,
+  between: space-between,
+  evenly: space-evenly,
+  around: space-around,
+);
+
+@function _get-flex-value($input) {
+  @return map-get($flex-value, $input);
+}
+
+@mixin flexbox($js: center, $ai: center) {
+  display: flex;
+  align-items: _get-flex-value($ai);
+  justify-content: _get-flex-value($js);
+}
+
+@mixin column-flexbox($js: center, $ai: center) {
+  display: flex;
+  flex-direction: column;
+  align-items: _get-flex-value($ai);
+  justify-content: _get-flex-value($js);
+}
+
+@mixin inline-flexbox($js: center, $ai: center) {
+  display: inline-flex;
+  align-items: _get-flex-value($ai);
+  justify-content: _get-flex-value($js);
+}
