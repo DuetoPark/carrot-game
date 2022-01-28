@@ -1,0 +1,62 @@
+.game-header {
+  @include column-flexbox;
+
+  .controls {
+    @include flexbox(between);
+    position: relative;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .control-btn {
+    @include flexbox;
+    width: 50px;
+    height: 50px;
+    font-size: 50px;
+    background-color: $white;
+    border: 0;
+    border-radius: 50%;
+
+    i {
+      pointer-events: none;
+    }
+
+    .ic-play {
+      font-size: 50px;
+    }
+
+    .ic-replay {
+      font-size: 30px;
+    }
+  }
+
+  .timer,
+  .counter {
+    @include text-style(24);
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: rgba($white, 0.4);
+    border: 2px solid $black;
+  }
+
+  .timer {
+    width: 90px;
+    height: 50px;
+    padding: 8px;
+  }
+
+  .counter {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+  }
+
+  p {
+    @include text-style(16, $white);
+    padding: 16px;
+    background-color: rgba($black, 0.3);
+    border-radius: 8px;
+  }
+}
