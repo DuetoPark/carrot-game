@@ -22,6 +22,12 @@
   letter-spacing: $letter-spacing-24;
 }
 
+@mixin text-style-72() {
+  font-size: $font-size-72;
+  line-height: $line-height-72;
+  letter-spacing: $letter-spacing-72;
+}
+
 @mixin text-style($size, $color: false) {
   @if ($size == 14) {
     @include text-style-14;
@@ -37,6 +43,10 @@
 
   @if ($size == 24) {
     @include text-style-24;
+  }
+
+  @if ($size == 72) {
+    @include text-style-72;
   }
 
   @if (type-of($color) == color) {
