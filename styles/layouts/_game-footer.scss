@@ -1,0 +1,23 @@
+.game-footer {
+  .result {
+    @include flexbox;
+    @include pos-center-x(fixed);
+    @include text-style(24);
+    bottom: 20px;
+    width: calc(100% - 40px);
+    height: calc(60vh - 40px);
+    padding: 16px;
+    pointer-events: none;
+    background-color: $white;
+    border-radius: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 250ms ease-in-out;
+
+    &.is-active {
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
