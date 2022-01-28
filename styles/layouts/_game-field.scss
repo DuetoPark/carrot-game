@@ -1,12 +1,5 @@
-.game-zone {
+.game-field {
   position: relative;
-  opacity: 0;
-  visibility: hidden;
-
-  &.is-active {
-    opacity: 1;
-    visibility: visible;
-  }
 
   .bug-btn,
   .carrot-btn {
@@ -19,6 +12,11 @@
     cursor: pointer;
     background-color: transparent;
     border: 0;
+    transition: all 150ms ease-in-out;
+
+    &:hover {
+      transform: scale(1.1);
+    }
 
     img {
       display: block;
