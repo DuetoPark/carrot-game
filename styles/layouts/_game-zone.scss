@@ -1,0 +1,43 @@
+.game-zone {
+  position: relative;
+  opacity: 0;
+  visibility: hidden;
+
+  &.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .bug-btn,
+  .carrot-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: transparent;
+    border: 0;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      object-fit: cover;
+    }
+  }
+
+  .bug-btn {
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 16px;
+  }
+
+  .carrot-btn {
+    width: 100px;
+    height: 100px;
+  }
+}
