@@ -1,56 +1,63 @@
 .game-header {
-  @include column-flexbox;
+  $btn-size: 60px;
 
-  .controls {
-    @include flexbox(between);
-    position: relative;
-    flex-wrap: nowrap;
-    width: 100%;
-    margin-bottom: 16px;
+  @include column-flexbox;
+  width: 100%;
+
+  .game-btn,
+  .game-timer,
+  .game-score {
+    flex-shrink: 0;
+    margin-bottom: 8px;
   }
 
-  .control-btn {
+  .game-btn {
     @include flexbox;
-    width: 50px;
-    height: 50px;
+    width: $btn-size;
+    height: $btn-size;
     font-size: 50px;
+    pointer-events: none;
     background-color: $white;
     border: 0;
     border-radius: 50%;
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 150ms ease-in-out;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &.is-active {
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+    }
 
     i {
-      pointer-events: none;
-    }
-
-    .ic-play {
       font-size: 50px;
-    }
-
-    .ic-replay {
-      font-size: 30px;
+      pointer-events: none;
     }
   }
 
-  .timer,
-  .counter {
+  .game-timer,
+  .game-score {
+    @include flexbox;
     @include text-style(24);
-    padding: 8px;
-    text-align: center;
-    vertical-align: middle;
     background-color: rgba($white, 0.4);
     border: 2px solid $black;
   }
 
-  .timer {
-    width: 90px;
+  .game-timer {
+    width: 100px;
     height: 50px;
-    padding: 8px;
+    border-radius: 8px;
   }
 
-  .counter {
-    width: 50px;
-    height: 50px;
-    border-radius: 50px;
+  .game-score {
+    width: $btn-size;
+    height: $btn-size;
+    border-radius: 50%;
   }
 
   p {
