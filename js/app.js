@@ -1,146 +1,201 @@
-const header = document.querySelector('.game-header');
-const gameZone = document.querySelector('.game-zone');
-const timer = document.querySelector('.timer');
-const counter = document.querySelector('.counter');
-const result = document.querySelector('.result');
-const init = { time: 10, count: null };
-let time = null;
-let count = null;
+'use strict';
+
+const CARROT_SIZE = 100;
+const CARROT_COUNT = 5;
+const BUG_COUNT = 5;
+const GAME_DURATION_SEC = 5;
+
+const field = document.querySelector('.game-field');
+const fieldRect = field.getBoundingClientRect();
+
+const gamePlayBtn = document.querySelector('.game-btn[data-id="play"]');
+const gameDesc = document.querySelector('.game-desc');
+const gameControl = document.querySelector('.game-control');
+
+const gameStopBtn = document.querySelector('.game-btn[data-id="stop"]');
+const gameTimer = document.querySelector('.game-timer');
+const gameScore = document.querySelector('.game-score');
+
+const popup = document.querySelector('.pop-up');
+const popupBtn = document.querySelector('.pop-up__refresh');
+const popupMessage = document.querySelector('.pop-up__message');
+
+const backgroundSound = new Audio('./assets/audio/bg.mp3');
+const alertSound = new Audio('./assets/audio/alert.wav');
+const bugSound = new Audio('./assets/audio/bug_pull.mp3');
+const carrotSound = new Audio('./assets/audio/carrot_pull.mp3');
+const winSound = new Audio('./assets/audio/game_win.mp3');
+
+let score = null;
 let countdown = null;
-let id = null;
+let started = false;
+
 const message = {
   win: '🥕🥕🥕 YEAH! YOU WIN! 💪😎🔥',
-  lose: '🐛🐛🐛 💦 YOU LOSE 🥲 🐛🐛🐛',
+  lose: '🐛🐛🐛 YOU LOSE 🥲 💦',
   timeover: '⏰ Time Over ⏰',
+  replay: '♻️ Replay?',
 };
 
-function onClock() {
-  countdown = setInterval(() => {
-    time -= 1;
+field.addEventListener('click', onFieldClick);
 
-    timer.textContent = `00:${time >= 10 ? time : '0' + time}`;
+function onFieldClick(event) {
+  if (!started) return;
 
-    if (time === 0) {
-      clearInterval(countdown);
-      timeover();
+  const target = event.target;
+  const carrot = target.matches('.carrot-btn');
+  const bug = target.matches('.bug-btn');
+
+  if (carrot) {
+    updateScoreBoard(--score);
+    playSound(carrotSound);
+    field.removeChild(target);
+
+    if (score === 0) {
+      stopGame(message.win);
+      playSound(winSound);
     }
+  }
+
+  if (bug) {
+    stopGame(message.lose);
+    playSound(bugSound);
+  }
+}
+
+gamePlayBtn.addEventListener('click', startGame);
+
+gameStopBtn.addEventListener('click', () => {
+  stopGame(message.replay);
+  playSound(alertSound);
+});
+
+popupBtn.addEventListener('click', () => {
+  refreshGame();
+  showGameStopBtn();
+  startGame();
+});
+
+function startGame() {
+  initGame();
+  showContorlHideDesc();
+  startGameTimer();
+  playSound(backgroundSound);
+
+  started = true;
+}
+
+function stopGame(message) {
+  stopGameTimer();
+  stopSound(backgroundSound);
+  hideGameStopBtn();
+  showPopUpWithText(message);
+
+  started = false;
+}
+
+function refreshGame() {
+  hidePopUp();
+  updateTimerText(GAME_DURATION_SEC);
+}
+
+function playSound(sound) {
+  sound.currentTime = 0;
+  sound.play();
+}
+
+function stopSound(sound) {
+  sound.pause();
+  sound.currentTime = 0;
+}
+
+function showContorlHideDesc() {
+  gameDesc.classList.remove('is-active');
+  gameControl.classList.add('is-active');
+}
+
+function hideGameStopBtn() {
+  gameStopBtn.classList.remove('is-active');
+}
+
+function showGameStopBtn() {
+  gameStopBtn.classList.add('is-active');
+}
+
+function showPopUpWithText(message) {
+  popupMessage.textContent = message;
+  popup.classList.add('is-active');
+}
+
+function hidePopUp() {
+  popup.classList.remove('is-active');
+}
+
+function startGameTimer() {
+  let remainingTimeSec = GAME_DURATION_SEC;
+  updateTimerText(remainingTimeSec);
+
+  countdown = setInterval(() => {
+    if (remainingTimeSec === 0) {
+      stopGame(message.timeover);
+      playSound(bugSound);
+      return;
+    }
+
+    updateTimerText(--remainingTimeSec);
   }, 1000);
 }
 
-function setBtnLocation() {
-  const rect = gameZone.getBoundingClientRect();
-  const width = rect.width - 100;
-  const height = rect.height - 100;
+function stopGameTimer() {
+  clearInterval(countdown);
+}
 
-  function randomCoord(max) {
-    return Math.floor(Math.random() * (max + 1));
+function updateTimerText(time) {
+  const min = Math.floor(time / 60);
+  const printMin = min < 10 ? '0' + min : min;
+
+  const sec = time % 60;
+  const printSec = sec < 10 ? '0' + sec : sec;
+
+  gameTimer.textContent = `${printMin}:${printSec}`;
+}
+
+function updateScoreBoard(score) {
+  gameScore.textContent = score;
+}
+
+function initGame() {
+  score = CARROT_COUNT;
+
+  field.innerHTML = '';
+
+  gameScore.textContent = CARROT_COUNT;
+
+  addItem('carrot', CARROT_COUNT, 'carrot.png');
+  addItem('bug', BUG_COUNT, 'bug.png');
+}
+
+function addItem(className, count, imgName) {
+  const x1 = 0;
+  const y1 = 0;
+  const x2 = fieldRect.width - CARROT_SIZE;
+  const y2 = fieldRect.height - CARROT_SIZE;
+
+  for (let i = 0; i < count; i++) {
+    const alt = className === 'carrot' ? '당근' : '벌레';
+
+    const btn = document.createElement('btn');
+    btn.setAttribute('class', `${className}-btn`);
+    btn.setAttribute('type', 'button');
+    btn.innerHTML = `<img src="./assets/images/${imgName}" alt="${alt}" />`;
+    const x = randomNumber(x1, x2);
+    const y = randomNumber(y1, y2);
+    btn.style.left = `${x}px`;
+    btn.style.top = `${y}px`;
+    field.appendChild(btn);
   }
-
-  const gameZoneBtns = document.querySelectorAll('.game-zone button');
-  gameZoneBtns.forEach((btn) => {
-    const x = randomCoord(width);
-    const y = randomCoord(height);
-
-    btn.style.transform = `translate(${x}px, ${y}px)`;
-  });
 }
 
-function createBtn() {
-  const button = document.createElement('button');
-  button.setAttribute('class', 'carrot-btn');
-  button.setAttribute('type', 'button');
-  button.setAttribute('data-id', 'carrot');
-  button.innerHTML = '<img src="./assets/images/carrot.png" alt="당근" />';
-
-  return button;
+function randomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
 }
-
-function gameOver() {
-  result.classList.add('is-active');
-  result.textContent = message.lose;
-}
-
-function win() {
-  result.classList.add('is-active');
-  result.textContent = message.win;
-}
-
-function timeover() {
-  result.classList.add('is-active');
-  result.textContent = message.timeover;
-}
-
-function reset() {
-  time = init.time;
-  count = init.count;
-
-  timer.textContent = `00:${init.time}`;
-  counter.textContent = init.count;
-}
-
-function changeControlBtn(event) {
-  const newName = id === 'play' ? 'replay' : 'play';
-  const ariaValue = newName === 'play' ? '시작' : '다시할래';
-
-  event.target.setAttribute('data-id', `${newName}`);
-  event.target.setAttribute('aria-label', `${ariaValue}`);
-  event.target.innerHTML = `<i class="ic-${newName}" aria-hidden="true"></i>`;
-}
-
-window.addEventListener('load', () => {
-  const carrotBtn = document.querySelectorAll('.carrot-btn');
-
-  init.count = carrotBtn.length;
-  reset();
-});
-
-header.addEventListener('click', (e) => {
-  id = e.target.dataset.id;
-  if (!id) return;
-
-  if (id === 'replay') {
-    clearInterval(countdown);
-
-    gameZone.classList.remove('is-active');
-    result.classList.remove('is-active');
-
-    for (let i = 0; i < init.count - count; i++) {
-      const bugBtn = document.querySelector('.bug-btn');
-      const button = createBtn();
-      gameZone.insertBefore(button, bugBtn);
-    }
-
-    reset();
-  }
-
-  if (id === 'play') {
-    onClock();
-    gameZone.classList.add('is-active');
-  }
-
-  changeControlBtn(e);
-  setBtnLocation();
-});
-
-gameZone.addEventListener('click', (e) => {
-  id = e.target.dataset.id;
-  if (!id) return;
-
-  if (id === 'bug') {
-    clearInterval(countdown);
-    gameOver();
-  }
-
-  if (id === 'carrot') {
-    count -= 1;
-    counter.textContent = count;
-    gameZone.removeChild(e.target);
-
-    const success = time > 0 && count === 0 ? true : false;
-
-    if (success) {
-      clearInterval(countdown);
-      win();
-    }
-  }
-});
