@@ -1,5 +1,7 @@
 .game-field {
   position: relative;
+  cursor: auto;
+  user-select: none;
 
   .bug-btn,
   .carrot-btn {
