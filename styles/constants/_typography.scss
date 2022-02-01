@@ -4,8 +4,8 @@ $typo-map: (
   20: 1.25rem,
   24: 1.5rem,
   32: 2rem,
-  72: 4.5rem,
-  80: 5rem,
+  56: 3.5rem,
+  68: 4.25rem,
 );
 
 @function _get-typo-value($font-size) {
@@ -28,6 +28,6 @@ $font-size-24: _get-typo-value(24);
 $line-height-24: _get-typo-value(32);
 $letter-spacing-24: -0.01em;
 
-$font-size-72: _get-typo-value(72);
-$line-height-72: _get-typo-value(80);
-$letter-spacing-72: -0.01em;
+$font-size-56: _get-typo-value(56);
+$line-height-56: _get-typo-value(68);
+$letter-spacing-56: -0.01em;

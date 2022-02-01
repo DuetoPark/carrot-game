@@ -2,7 +2,7 @@
   $btn-size: 60px;
 
   @include pos-center(fixed);
-  @include flexbox;
+  @include column-flexbox;
   bottom: 20px;
   display: none;
   width: 80%;
@@ -33,7 +33,15 @@
   }
 
   &__message {
-    @include text-style(72, $white);
-    display: block;
+    @include column-flexbox;
+    @include text-style(24, $white);
+    cursor: auto;
+    user-select: none;
+  }
+
+  @include responsive('T') {
+    &__message {
+      @include text-style(56);
+    }
   }
 }
