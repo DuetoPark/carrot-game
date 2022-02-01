@@ -1,5 +1,7 @@
 'use strict';
 
+import PopUp from './_popup.js';
+
 const CARROT_SIZE = 100;
 const CARROT_COUNT = 5;
 const BUG_COUNT = 5;
@@ -15,10 +17,6 @@ const gameControl = document.querySelector('.game-control');
 const gameStopBtn = document.querySelector('.game-btn[data-id="stop"]');
 const gameTimer = document.querySelector('.game-timer');
 const gameScore = document.querySelector('.game-score');
-
-const popup = document.querySelector('.pop-up');
-const popupBtn = document.querySelector('.pop-up__refresh');
-const popupMessage = document.querySelector('.pop-up__message');
 
 const backgroundSound = new Audio('./assets/audio/bg.mp3');
 const alertSound = new Audio('./assets/audio/alert.wav');
@@ -37,6 +35,12 @@ const message = {
     '<i aria-hidden="true">⏰</i> Time Over <i aria-hidden="true">⏰</i>',
   replay: '<i aria-hidden="true">♻️</i> Replay?',
 };
+
+const gameFinishBanner = new PopUp();
+gameFinishBanner.setClickListener(() => {
+  refreshGame();
+  startGame();
+});
 
 field.addEventListener('click', onFieldClick);
 
@@ -71,11 +75,6 @@ gameStopBtn.addEventListener('click', () => {
   playSound(alertSound);
 });
 
-popupBtn.addEventListener('click', () => {
-  refreshGame();
-  startGame();
-});
-
 function startGame() {
   initGame();
   showContorlHideDesc();
@@ -89,13 +88,12 @@ function stopGame(message) {
   stopGameTimer();
   stopSound(backgroundSound);
   hideGameStopBtn();
-  showPopUpWithText(message);
+  gameFinishBanner.showWithText(message);
 
   started = false;
 }
 
 function refreshGame() {
-  hidePopUp();
   updateTimerText(GAME_DURATION_SEC);
   showGameStopBtn();
 }
@@ -121,15 +119,6 @@ function hideGameStopBtn() {
 
 function showGameStopBtn() {
   gameStopBtn.classList.add('is-active');
-}
-
-function showPopUpWithText(message) {
-  popupMessage.textContent = message;
-  popup.classList.add('is-active');
-}
-
-function hidePopUp() {
-  popup.classList.remove('is-active');
 }
 
 function startGameTimer() {
