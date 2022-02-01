@@ -2,13 +2,19 @@
   $btn-size: 60px;
 
   @include column-flexbox;
+  position: relative;
   width: 100%;
 
-  .game-btn,
-  .game-timer,
-  .game-score {
-    flex-shrink: 0;
-    margin-bottom: 8px;
+  .game-desc,
+  .game-control {
+    opacity: 0;
+    visibility: hidden;
+
+    &.is-active {
+      pointer-events: auto;
+      opacity: 1;
+      visibility: visible;
+    }
   }
 
   .game-btn {
@@ -16,54 +22,78 @@
     width: $btn-size;
     height: $btn-size;
     font-size: 50px;
-    pointer-events: none;
     background-color: $white;
     border: 0;
     border-radius: 50%;
-    opacity: 0;
-    visibility: hidden;
     transition: transform 150ms ease-in-out;
 
     &:hover {
       transform: scale(1.1);
     }
 
-    &.is-active {
-      pointer-events: auto;
-      opacity: 1;
-      visibility: visible;
-    }
-
     i {
       font-size: 50px;
+      color: $black;
       pointer-events: none;
     }
   }
 
-  .game-timer,
-  .game-score {
-    @include flexbox;
-    @include text-style(24);
-    background-color: rgba($white, 0.4);
-    border: 2px solid $black;
-  }
-
-  .game-timer {
-    width: 100px;
-    height: 50px;
-    border-radius: 8px;
-  }
-
-  .game-score {
-    width: $btn-size;
-    height: $btn-size;
-    border-radius: 50%;
-  }
-
-  p {
+  .game-desc {
+    @include pos-center;
+    @include column-flexbox;
     @include text-style(16, $white);
+    min-width: 80%;
     padding: 16px;
+    pointer-events: none;
     background-color: rgba($black, 0.3);
     border-radius: 8px;
+
+    p {
+      margin-bottom: 24px;
+    }
+  }
+
+  .game-control {
+    @include column-flexbox;
+
+    .game-btn,
+    .game-timer,
+    .game-score {
+      flex-shrink: 0;
+    }
+
+    .game-btn {
+      opacity: 0;
+      visibility: hidden;
+
+      &.is-active {
+        pointer-events: auto;
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    .game-timer,
+    .game-score {
+      @include flexbox;
+      @include text-style(24);
+      cursor: auto;
+      background-color: rgba($white, 0.6);
+      border: 2px solid $black;
+      user-select: none;
+    }
+
+    .game-timer {
+      width: 100px;
+      height: 50px;
+      margin: 36px 0;
+      border-radius: 8px;
+    }
+
+    .game-score {
+      width: $btn-size;
+      height: $btn-size;
+      border-radius: 50%;
+    }
   }
 }
