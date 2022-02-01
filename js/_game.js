@@ -3,8 +3,15 @@
 import Field from './_field.js';
 import * as sound from './_sound.js';
 
+export const Reason = Object.freeze({
+  win: 'win',
+  lose: 'lose',
+  replay: 'replay',
+  timeover: 'timeover',
+});
+
 // NOTE: Builder Pattern
-export default class GameBuilder {
+export class GameBuilder {
   setCarrotCount(num) {
     this.carrotCount = num;
     return this;
@@ -45,8 +52,7 @@ class Game {
 
     this.gameStopBtn = document.querySelector('.game-btn[data-id="stop"]');
     this.gameStopBtn.addEventListener('click', () => {
-      this.stop('replay');
-      sound.playAlert();
+      this.stop(Reason.replay);
     });
 
     this.field = new Field(this.carrotCount, this.bugCount);
@@ -89,13 +95,12 @@ class Game {
       this.updateScoreBoard(--this.score);
 
       if (this.score === 0) {
-        this.stop('win');
-        sound.playWin();
+        this.stop(Reason.win);
       }
     }
 
     if (item === 'bug') {
-      this.stop('lose');
+      this.stop(Reason.lose);
     }
   };
 
@@ -118,8 +123,7 @@ class Game {
 
     this.countdown = setInterval(() => {
       if (remainingTimeSec === 0) {
-        this.stop('timeover');
-        sound.playBug();
+        this.stop(Reason.timeover);
         return;
       }
 

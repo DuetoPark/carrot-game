@@ -1,7 +1,8 @@
 'use strict';
 
 import PopUp from './_popup.js';
-import GameBuilder from './_game.js';
+import { GameBuilder, Reason } from './_game.js';
+import * as sound from './_sound.js';
 
 const gameFinishBanner = new PopUp();
 
@@ -15,21 +16,24 @@ game.setGameStopListener((reason) => {
   let message;
 
   switch (reason) {
-    case 'win':
+    case Reason.win:
+      sound.playWin();
       message =
         '<i aria-hidden="true">🥕🥕🥕</i> YEAH! YOU WIN! <i aria-hidden="true">💪😎🔥</i>';
       break;
 
-    case 'lose':
+    case Reason.lose:
       message =
         '<i aria-hidden="true">🐛🐛🐛</i> YOU LOSE <i aria-hidden="true">🥲 💦</i>';
       break;
 
-    case 'timeover':
+    case Reason.timeover:
+      sound.playBug();
       message = '<i aria-hidden="true">⏰</i> Time Over';
       break;
 
-    case 'replay':
+    case Reason.replay:
+      sound.playAlert();
       message = '<i aria-hidden="true">♻️</i> Replay?';
       break;
 
