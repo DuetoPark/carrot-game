@@ -2,14 +2,11 @@
 
 import PopUp from './_popup.js';
 import * as sound from './_sound.js';
+import Field from './_field.js';
 
-const CARROT_SIZE = 100;
 const CARROT_COUNT = 5;
 const BUG_COUNT = 5;
 const GAME_DURATION_SEC = 5;
-
-const field = document.querySelector('.game-field');
-const fieldRect = field.getBoundingClientRect();
 
 const gamePlayBtn = document.querySelector('.game-btn[data-id="play"]');
 const gameDesc = document.querySelector('.game-desc');
@@ -37,19 +34,14 @@ gameFinishBanner.setClickListener(() => {
   startGame();
 });
 
-field.addEventListener('click', onFieldClick);
+const field = new Field(CARROT_COUNT, BUG_COUNT);
+field.setClickListener(onFieldClick);
 
-function onFieldClick(event) {
+function onFieldClick(item) {
   if (!started) return;
 
-  const target = event.target;
-  const carrot = target.matches('.carrot-btn');
-  const bug = target.matches('.bug-btn');
-
-  if (carrot) {
+  if (item === 'carrot') {
     updateScoreBoard(--score);
-    sound.playCarrot();
-    field.removeChild(target);
 
     if (score === 0) {
       stopGame(message.win);
@@ -57,9 +49,8 @@ function onFieldClick(event) {
     }
   }
 
-  if (bug) {
+  if (item === 'bug') {
     stopGame(message.lose);
-    sound.playBug();
   }
 }
 
@@ -67,25 +58,23 @@ gamePlayBtn.addEventListener('click', startGame);
 
 gameStopBtn.addEventListener('click', () => {
   stopGame(message.replay);
-  layAlert();
+  sound.playAlert();
 });
 
 function startGame() {
+  started = true;
   initGame();
   showContorlHideDesc();
   startGameTimer();
   sound.playBgm();
-
-  started = true;
 }
 
 function stopGame(message) {
-  stopGameTimer();
-  sound.stopBgm();
-  hideGameStopBtn();
-  gameFinishBanner.showWithText(message);
-
   started = false;
+  gameFinishBanner.showWithText(message);
+  sound.stopBgm();
+  stopGameTimer();
+  hideGameStopBtn();
 }
 
 function refreshGame() {
@@ -141,36 +130,7 @@ function updateScoreBoard(score) {
 
 function initGame() {
   score = CARROT_COUNT;
-
-  field.innerHTML = '';
-
   gameScore.textContent = CARROT_COUNT;
 
-  addItem('carrot', CARROT_COUNT, 'carrot.png');
-  addItem('bug', BUG_COUNT, 'bug.png');
-}
-
-function addItem(className, count, imgName) {
-  const x1 = 0;
-  const y1 = 0;
-  const x2 = fieldRect.width - CARROT_SIZE;
-  const y2 = fieldRect.height - CARROT_SIZE;
-
-  for (let i = 0; i < count; i++) {
-    const alt = className === 'carrot' ? '당근' : '벌레';
-
-    const btn = document.createElement('btn');
-    btn.setAttribute('class', `${className}-btn`);
-    btn.setAttribute('type', 'button');
-    btn.innerHTML = `<img src="./assets/images/${imgName}" alt="${alt}" />`;
-    const x = randomNumber(x1, x2);
-    const y = randomNumber(y1, y2);
-    btn.style.left = `${x}px`;
-    btn.style.top = `${y}px`;
-    field.appendChild(btn);
-  }
-}
-
-function randomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
+  field.init();
 }
