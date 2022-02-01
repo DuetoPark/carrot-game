@@ -31,10 +31,11 @@ let countdown = null;
 let started = false;
 
 const message = {
-  win: '🥕🥕🥕 YEAH! YOU WIN! 💪😎🔥',
-  lose: '🐛🐛🐛 YOU LOSE 🥲 💦',
-  timeover: '⏰ Time Over ⏰',
-  replay: '♻️ Replay?',
+  win: '<i aria-hidden="true">🥕🥕🥕</i> YEAH! YOU WIN! <i aria-hidden="true">💪😎🔥</i>',
+  lose: '<i aria-hidden="true">🐛🐛🐛</i> YOU LOSE <i aria-hidden="true">🥲 💦</i>',
+  timeover:
+    '<i aria-hidden="true">⏰</i> Time Over <i aria-hidden="true">⏰</i>',
+  replay: '<i aria-hidden="true">♻️</i> Replay?',
 };
 
 field.addEventListener('click', onFieldClick);
@@ -72,7 +73,6 @@ gameStopBtn.addEventListener('click', () => {
 
 popupBtn.addEventListener('click', () => {
   refreshGame();
-  showGameStopBtn();
   startGame();
 });
 
@@ -97,6 +97,7 @@ function stopGame(message) {
 function refreshGame() {
   hidePopUp();
   updateTimerText(GAME_DURATION_SEC);
+  showGameStopBtn();
 }
 
 function playSound(sound) {
