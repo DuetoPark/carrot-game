@@ -22,24 +22,37 @@
       <header class="game-header">
         <h1 class="visually-hidden">당근 게임 소개 및 조작법</h1>
 
-        <button
-          class="game-btn is-active"
-          type="button"
-          data-id="play"
-          aria-label="시작"
-        >
-          <i class="ic-play" aria-hidden="true"></i>
-        </button>
+        <div class="game-desc is-active">
+          <p>
+            나는 농부. 도시생활을 청산하고 당근 농장을 차렸다.<br />
+            이제 시간 안에 당근을 모두 뽑기만 하면 된다.<br />
+            하지만 벌레가 내 당근을 노리고있다.<br />
+            제발 그만해애애..! 이러다 다아아 죽어어어..!<br />
+          </p>
 
-        <span class="game-timer"></span>
-        <span class="game-score"></span>
+          <button
+            class="game-btn"
+            type="button"
+            aria-label="시작"
+            data-id="play"
+          >
+            <i class="ic-play" aria-hidden="true"></i>
+          </button>
+        </div>
 
-        <p>
-          나는 농부. 도시생활을 청산하고 당근 농장을 차렸다.<br />
-          이제 시간 안에 당근을 모두 뽑기만 하면 된다.<br />
-          하지만 벌레가 내 당근을 노리고있다.<br />
-          제발 그만해애애..! 이러다 다아아 죽어어어..!<br />
-        </p>
+        <div class="game-control">
+          <button
+            class="game-btn is-active"
+            type="button"
+            aria-label="멈춤"
+            data-id="stop"
+          >
+            <i class="ic-stop" aria-hidden="true"></i>
+          </button>
+
+          <span class="game-timer"></span>
+          <span class="game-score"></span>
+        </div>
       </header>
 
       <main class="game-field"></main>
