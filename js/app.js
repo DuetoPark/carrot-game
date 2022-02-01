@@ -1,6 +1,7 @@
 'use strict';
 
 import PopUp from './_popup.js';
+import * as sound from './_sound.js';
 
 const CARROT_SIZE = 100;
 const CARROT_COUNT = 5;
@@ -17,12 +18,6 @@ const gameControl = document.querySelector('.game-control');
 const gameStopBtn = document.querySelector('.game-btn[data-id="stop"]');
 const gameTimer = document.querySelector('.game-timer');
 const gameScore = document.querySelector('.game-score');
-
-const backgroundSound = new Audio('./assets/audio/bg.mp3');
-const alertSound = new Audio('./assets/audio/alert.wav');
-const bugSound = new Audio('./assets/audio/bug_pull.mp3');
-const carrotSound = new Audio('./assets/audio/carrot_pull.mp3');
-const winSound = new Audio('./assets/audio/game_win.mp3');
 
 let score = null;
 let countdown = null;
@@ -53,18 +48,18 @@ function onFieldClick(event) {
 
   if (carrot) {
     updateScoreBoard(--score);
-    playSound(carrotSound);
+    sound.playCarrot();
     field.removeChild(target);
 
     if (score === 0) {
       stopGame(message.win);
-      playSound(winSound);
+      sound.playWin();
     }
   }
 
   if (bug) {
     stopGame(message.lose);
-    playSound(bugSound);
+    sound.playBug();
   }
 }
 
@@ -72,21 +67,21 @@ gamePlayBtn.addEventListener('click', startGame);
 
 gameStopBtn.addEventListener('click', () => {
   stopGame(message.replay);
-  playSound(alertSound);
+  layAlert();
 });
 
 function startGame() {
   initGame();
   showContorlHideDesc();
   startGameTimer();
-  playSound(backgroundSound);
+  sound.playBgm();
 
   started = true;
 }
 
 function stopGame(message) {
   stopGameTimer();
-  stopSound(backgroundSound);
+  sound.stopBgm();
   hideGameStopBtn();
   gameFinishBanner.showWithText(message);
 
@@ -96,16 +91,6 @@ function stopGame(message) {
 function refreshGame() {
   updateTimerText(GAME_DURATION_SEC);
   showGameStopBtn();
-}
-
-function playSound(sound) {
-  sound.currentTime = 0;
-  sound.play();
-}
-
-function stopSound(sound) {
-  sound.pause();
-  sound.currentTime = 0;
 }
 
 function showContorlHideDesc() {
@@ -128,7 +113,7 @@ function startGameTimer() {
   countdown = setInterval(() => {
     if (remainingTimeSec === 0) {
       stopGame(message.timeover);
-      playSound(bugSound);
+      sound.playBug();
       return;
     }
 
