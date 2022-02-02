@@ -4,7 +4,12 @@ import * as sound from './_sound.js';
 
 const CARROT_SIZE = 100;
 
-export default class Field {
+export const ItemType = Object.freeze({
+  carrot: 'carrot',
+  bug: 'bug',
+});
+
+export class Field {
   constructor(carrotCount, bugCount) {
     this.carrotCount = carrotCount;
     this.bugCount = bugCount;
@@ -20,8 +25,8 @@ export default class Field {
 
   init() {
     this.field.innerHTML = '';
-    this._addItem('carrot', this.carrotCount, 'carrot.png');
-    this._addItem('bug', this.bugCount, 'bug.png');
+    this._addItem(ItemType.carrot, this.carrotCount, 'carrot.png');
+    this._addItem(ItemType.bug, this.bugCount, 'bug.png');
   }
 
   _addItem(className, count, imgName) {
@@ -31,7 +36,7 @@ export default class Field {
     const y2 = this.fieldRect.height - CARROT_SIZE;
 
     for (let i = 0; i < count; i++) {
-      const alt = className === 'carrot' ? '당근' : '벌레';
+      const alt = className === ItemType.carrot ? '당근' : '벌레';
 
       const btn = document.createElement('btn');
       btn.setAttribute('class', `${className}-btn`);
@@ -53,12 +58,12 @@ export default class Field {
     if (carrot) {
       sound.playCarrot();
       target.remove();
-      this.onItemClick && this.onItemClick('carrot');
+      this.onItemClick && this.onItemClick(ItemType.carrot);
     }
 
     if (bug) {
       sound.playBug();
-      this.onItemClick && this.onItemClick('bug');
+      this.onItemClick && this.onItemClick(ItemType.bug);
     }
   };
 }
